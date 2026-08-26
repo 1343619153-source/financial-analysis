@@ -44,7 +44,10 @@ def _industry_size_residual(g: pd.DataFrame, col: str) -> pd.Series:
         out.loc[valid] = y.loc[valid] - y.loc[valid].mean()
         return out
     ind = pd.get_dummies(g.loc[valid, "industry"], dummy_na=False, dtype=float)
-    size = np.log(pd.to_numeric(g.loc[valid, "total_mv"], errors="coerce").clip(lower=1))
+    size = pd.to_numeric(g["total_mv"], errors="coerce") if "total_mv" in g.columns else pd.Series(np.nan, index=g.index)
+    if size.notna().mean() < 0.3 and "amount" in g.columns:
+        size = pd.to_numeric(g["amount"], errors="coerce")
+    size = np.log(size.clip(lower=1)).loc[valid]
     x = pd.concat([ind, size.rename("log_mv")], axis=1)
     x = x.replace([np.inf, -np.inf], np.nan).dropna()
     yy = y.reindex(x.index)

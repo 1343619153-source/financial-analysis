@@ -24,10 +24,11 @@ def run(config_path: str | None = None) -> None:
     daily = load_or_download(cfg, paths)
     notes = [
         f"数据源：{cfg.get('source')}",
+        f"股票池：沪深300最新成分前 {cfg.get('max_stocks')} 只，实际 {daily['ts_code'].nunique()} 只",
         f"区间：{cfg['start_date']} ~ {cfg['end_date']}",
         "动量：过去 20 日收益，去掉最近 5 日",
         "EP：1 / pe_ttm（pe_ttm<=0 视为缺失）",
-        "中性化：截面 MAD 去极值 + Z-Score，再对行业哑变量与 log(市值) 回归取残差",
+        "中性化：截面 MAD 去极值 + Z-Score，再对行业与 log(成交额) 回归取残差（BaoStock 无日频总市值，用成交额作规模代理）",
         "评价对象：中性化后的 mom_n / ep_n，仅样本内交易日",
     ]
 

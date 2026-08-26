@@ -1,12 +1,13 @@
-# sample: 不需要 token，用内置样例跑通全流程
-# tushare: 需要环境变量 TUSHARE_TOKEN 或 .env
-source: sample
+# sample: 内置虚拟数据
+# baostock: 真实 A 股（沪深300，免费无需 token）
+# tushare: 真实 A 股（需要 TUSHARE_TOKEN）
+source: baostock
+use_cache: true
 
 universe: hs300
-# Tushare 全量沪深300 请求较多，先用前 N 只验证接口
-tushare_max_stocks: 40
-start_date: "2021-01-01"
-end_date: "2022-12-31"
+max_stocks: 50
+start_date: "2022-01-01"
+end_date: "2024-12-31"
 min_list_days: 180
 
 filters:
@@ -22,7 +23,6 @@ evaluate:
   forward_days: [1, 5, 20]
   quantiles: 5
 
-# 对照实验：复权开关、涨跌停过滤开关
 ablation:
   - name: baseline
     use_adj: true
