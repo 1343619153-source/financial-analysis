@@ -1,0 +1,35 @@
+# sample: 不需要 token，用内置样例跑通全流程
+# tushare: 需要环境变量 TUSHARE_TOKEN 或 .env
+source: sample
+
+universe: hs300
+# Tushare 全量沪深300 请求较多，先用前 N 只验证接口
+tushare_max_stocks: 40
+start_date: "2021-01-01"
+end_date: "2022-12-31"
+min_list_days: 180
+
+filters:
+  exclude_st: true
+  exclude_suspend: true
+  exclude_limit: true
+
+factors:
+  momentum_window: 20
+  momentum_skip: 5
+
+evaluate:
+  forward_days: [1, 5, 20]
+  quantiles: 5
+
+# 对照实验：复权开关、涨跌停过滤开关
+ablation:
+  - name: baseline
+    use_adj: true
+    exclude_limit: true
+  - name: no_adj
+    use_adj: false
+    exclude_limit: true
+  - name: no_limit_filter
+    use_adj: true
+    exclude_limit: false
